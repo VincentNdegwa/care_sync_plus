@@ -11,13 +11,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-
     Route::get('/check-valid-token', [TokenValidationController::class, "checkIfValid"]);
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+
+    Route::prefix("/profile")->group(function () {});
 });
 
-// Post("/api/register")
 Route::post('register', [RegisteredUserController::class, 'store']);
-// login user
 Route::post('login', [AuthenticatedSessionController::class, 'store']);

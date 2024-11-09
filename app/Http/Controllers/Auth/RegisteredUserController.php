@@ -60,7 +60,7 @@ class RegisteredUserController extends Controller
                 "error" => true,
                 'message' => 'Invalid details provided',
                 'errors' => $th->errors()
-            ], 401);
+            ]);
         } catch (\Throwable $th) {
             return response()->json([
                 "error" => true,
