@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\TokenValidationController;
@@ -23,3 +24,5 @@ Route::post('register', [RegisteredUserController::class, 'store']);
 Route::post('login', [AuthenticatedSessionController::class, 'store']);
 Route::post('forgotPassword', [PasswordResetLinkController::class, 'store'])
     ->name('password.email');
+Route::post('resetPassword', [NewPasswordController::class, 'store'])
+    ->name('password.store');
