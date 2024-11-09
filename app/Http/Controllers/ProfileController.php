@@ -33,7 +33,7 @@ class ProfileController extends Controller
         try {
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
-                'email' => Rule::unique("users", "email")->ignore($request->user()->id),
+                'email' => 'required|email|' . Rule::unique("users", "email")->ignore($request->user()->id),
             ]);
 
             $user = $request->user();

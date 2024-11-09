@@ -1,26 +1,69 @@
+import { useEffect, useState } from "react";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { Transition } from "@headlessui/react";
-import { Link, useForm, usePage } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
+import axiosInstance from "@/customAxios";
 
+const axios = axiosInstance;
 export default function UpdateProfileInformation({
     mustVerifyEmail,
     status,
     user,
     className = "",
 }) {
-    const { data, setData, patch, errors, processing, recentlySuccessful } =
-        useForm({
-            name: user.name,
-            email: user.email,
-        });
+    const [data, setData] = useState({
+        name: user?.name,
+        email: user?.email,
+    });
 
-    const submit = (e) => {
+    useEffect(() => {
+        let userString = localStorage.getItem("user");
+        if (userString) {
+            setData(JSON.parse(userString));
+        }
+    }, []);
+
+    const [errors, setErrors] = useState({});
+
+    const [processing, setProcessing] = useState(false);
+    const [recentlySuccessful, setRecentlySuccessful] = useState(false);
+
+    const submit = async (e) => {
         e.preventDefault();
+        setProcessing(true);
 
-        patch(route("profile.update"));
+        try {
+            axios.patch("/profile/update", data).then((response) => {
+                if (response.data.error) {
+                    if (response.data.errors) {
+                        setErrors(response.data.errors);
+                    } else {
+                        alert(response.data.message);
+                    }
+                } else {
+                    alert(response.data.message);
+                    setErrors({});
+                    setRecentlySuccessful(true);
+                    localStorage.setItem(
+                        "user",
+                        JSON.stringify(response.data.user)
+                    );
+                }
+            });
+        } catch (error) {
+            if (error.response && error.response.data.errors) {
+                setErrors(error.response.data.errors);
+            } else {
+                setErrors({
+                    general: "An error occurred while updating your profile.",
+                });
+            }
+        } finally {
+            setProcessing(false);
+        }
     };
 
     return (
@@ -29,7 +72,6 @@ export default function UpdateProfileInformation({
                 <h2 className="text-lg font-medium text-gray-900">
                     Profile Information
                 </h2>
-
                 <p className="mt-1 text-sm text-gray-600">
                     Update your account's profile information and email address.
                 </p>
@@ -38,33 +80,34 @@ export default function UpdateProfileInformation({
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
                     <InputLabel htmlFor="name" value="Name" />
-
                     <TextInput
                         id="name"
                         className="mt-1 block w-full"
                         value={data.name}
-                        onChange={(e) => setData("name", e.target.value)}
+                        onChange={(e) =>
+                            setData({ ...data, name: e.target.value })
+                        }
                         required
                         isFocused
                         autoComplete="name"
                     />
-
                     <InputError className="mt-2" message={errors.name} />
                 </div>
 
                 <div>
                     <InputLabel htmlFor="email" value="Email" />
-
                     <TextInput
                         id="email"
                         type="email"
-                        className="mt-1 block w-full"
+                        disabled
+                        className="mt-1 block w-full cursor-not-allowed ring-0"
                         value={data.email}
-                        onChange={(e) => setData("email", e.target.value)}
+                        onChange={(e) =>
+                            setData({ ...data, email: e.target.value })
+                        }
                         required
                         autoComplete="username"
                     />
-
                     <InputError className="mt-2" message={errors.email} />
                 </div>
 
