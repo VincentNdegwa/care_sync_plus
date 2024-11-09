@@ -34,6 +34,23 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         return redirect()->intended(route('dashboard', absolute: false));
+
+        // $request->validate([
+        //     'email' => 'required|email|exists:users,email',
+        //     'password' => 'required',
+        // ]);
+        // $user = User::where('email', $request->email)->first();
+        // if (!$user || !Hash::check($request->password, $user->password)) {
+        //     throw ValidationException::withMessages([
+        //         'email' => ['The provided credentials are incorrect.'],
+        //     ]);
+        // }
+        // $token = $user->createToken('API Token')->plainTextToken;
+        // return response()->json([
+        //     "error" => false,
+        //     'message' => 'Login successful',
+        //     'token' => $token,
+        // ], 200);
     }
 
     /**
