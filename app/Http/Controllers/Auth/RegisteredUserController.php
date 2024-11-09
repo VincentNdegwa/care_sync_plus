@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -28,24 +29,44 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        // return response()->json($request->all());
 
-        event(new Registered($user));
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
+                'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            ]);
 
-        Auth::login($user);
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
-        return redirect(route('dashboard', absolute: false));
+            $token = $user->createToken('API Token')->plainTextToken;
+
+            return response()->json([
+                "error" => false,
+                'message' => 'Registration successful',
+                'token' => $token,
+                "user" => $user
+            ], 200);
+        } catch (ValidationException $th) {
+            return response()->json([
+                "error" => true,
+                'message' => 'Invalid details provided',
+                'errors' => $th->errors()
+            ], 401);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "error" => true,
+                'message' => 'An error occurred during registration',
+                'errors' => $th->getMessage()
+            ], 500);
+        }
     }
 }
