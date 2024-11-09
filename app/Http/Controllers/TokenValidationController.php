@@ -9,7 +9,7 @@ class TokenValidationController extends Controller
 {
     public function checkIfValid(Request $request)
     {
-        if (Auth::check() && Auth::user()) {
+        if (Auth::check()) {
             return response()->json([
                 "error" => false,
                 'message' => 'Token validation successful',

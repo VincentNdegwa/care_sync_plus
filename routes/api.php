@@ -13,6 +13,8 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::get('/check-valid-token', [TokenValidationController::class, "checkIfValid"]);
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+        ->name('logout');
 });
 
 // Post("/api/register")
