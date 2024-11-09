@@ -58,7 +58,7 @@ class RegisteredUserController extends Controller
         } catch (ValidationException $th) {
             return response()->json([
                 "error" => true,
-                'message' => 'Invalid details provided',
+                "message" => $th->getMessage(),
                 'errors' => $th->errors()
             ]);
         } catch (\Throwable $th) {

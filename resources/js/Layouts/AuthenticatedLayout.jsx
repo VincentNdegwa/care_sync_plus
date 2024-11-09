@@ -19,7 +19,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
     useEffect(() => {
         axios
-            .get("/check-valid-token")
+            .get("/checkTokenIsValid")
             .then((response) => {
                 if (response.data.error === false) {
                     setUser(response.data.user);
@@ -95,7 +95,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                             </button>
                                         </span>
                                     </Dropdown.Trigger>
-{/*
+                                    {/*
                                     <Dropdown.Content>
                                         <Dropdown.Link
                                             href={route("profile.edit")}
