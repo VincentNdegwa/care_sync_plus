@@ -3,9 +3,11 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
+import axiosInstance from '@/customAxios';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 
+const axios = axiosInstance
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
@@ -16,10 +18,22 @@ export default function Login({ status, canResetPassword }) {
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('login'), {
-            onFinish: () => reset('password'),
-        });
-        
+        axios.post("/login", data).then((response) => {
+            if (response.data.error) {
+                alert(response.data.message)
+            }
+
+            if (response.data.error == false) {
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+                router.get(route('dashboard'))
+            }
+        }).catch((error) => {
+            alert("An error occurred while logging in. Please try again.")
+            console.log(error);
+        })
+
+
     };
 
     return (
