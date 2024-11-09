@@ -1,10 +1,27 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
-import DeleteUserForm from './Partials/DeleteUserForm';
-import UpdatePasswordForm from './Partials/UpdatePasswordForm';
-import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Head } from "@inertiajs/react";
+import DeleteUserForm from "./Partials/DeleteUserForm";
+import UpdatePasswordForm from "./Partials/UpdatePasswordForm";
+import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm";
+import { useEffect, useState } from "react";
+import axiosInstance from "@/customAxios";
 
+const axios = axiosInstance;
 export default function Edit({ mustVerifyEmail, status }) {
+    const [user, setUser] = useState(null);
+    useEffect(() => {
+        axios
+            .get("/profile/user")
+            .then((response) => {
+                if (response.data.error == false) {
+                    setUser(response.data.user);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
+
     return (
         <AuthenticatedLayout
             header={
@@ -21,6 +38,7 @@ export default function Edit({ mustVerifyEmail, status }) {
                         <UpdateProfileInformationForm
                             mustVerifyEmail={mustVerifyEmail}
                             status={status}
+                            user={user}
                             className="max-w-xl"
                         />
                     </div>
