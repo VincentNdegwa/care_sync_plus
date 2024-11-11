@@ -6,6 +6,13 @@ import { useEffect, useState } from "react";
 import LoadingUi from "../Pages/Ui/LoadinUI";
 import RedirectinUi from "@/Pages/Ui/RedirectingUI";
 import Unauthorized from "@/Pages/Ui/Unauthorized";
+import { FiServer } from "react-icons/fi";
+import { GiMedicines } from "react-icons/gi";
+import { BsCalendar3 } from "react-icons/bs";
+import { FaUserNurse } from "react-icons/fa6";
+import { TbReport } from "react-icons/tb";
+import { BsBell } from "react-icons/bs";
+import { SlSettings } from "react-icons/sl";
 
 const axios = axiosInstance;
 
@@ -60,26 +67,66 @@ export default function AuthenticatedLayout({ header, children }) {
                     <Link href="/">
                         <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
                     </Link>
-                    <div className="mt-8 space-y-2">
+                    <div className="mt-10 space-y-2">
                         <Link
                             href={route("dashboard")}
-                            className="block px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md"
+                            className="flex items-center gap-1 px-4 py-2 text-gray-600 hover:bg-[#454ae756] hover:text-[#454BE7] rounded-md"
                         >
+                            <FiServer />
                             Dashboard
                         </Link>
                         <Link
-                            href={route("profile.edit")}
-                            className="block px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md"
+                            href={route("medication.Medication")}
+                            className="flex items-center gap-1 px-4 py-2 text-gray-600 hover:bg-[#454ae756] hover:text-[#454BE7] rounded-md"
                         >
-                            Profile
+                            <GiMedicines />
+                            Medication
+                        </Link>
+                        <Link
+                            href={route("profile.edit")}
+                            className="flex items-center gap-1 px-4 py-2 text-gray-600 hover:bg-[#454ae756] hover:text-[#454BE7] rounded-md"
+                        >
+                            <BsCalendar3 />
+                            Reminder
+                        </Link>
+                        <Link
+                            href={route("profile.edit")}
+                            className="flex items-center gap-1 px-4 py-2 text-gray-600 hover:bg-[#454ae756] hover:text-[#454BE7] rounded-md"
+                        >
+                            <FaUserNurse />
+                            Care Providers
+                        </Link>
+                        <Link
+                            href={route("report.Report")}
+                            className="flex items-center gap-1 px-4 py-2 text-gray-600 hover:bg-[#454ae756] hover:text-[#454BE7] rounded-md"
+                        >
+                            <TbReport />
+                            Report
                         </Link>
                         <button
                             onClick={handleLogout}
-                            className="w-full px-4 py-2 text-left text-gray-600 hover:bg-gray-100 rounded-md"
+                            className="w-full px-4 py-2 text-left text-gray-600 hover:bg-gray-100 rounded-md hidden"
                         >
                             Log Out
                         </button>
                     </div>
+                </div>
+
+                <div className="grid p-4 mt-28">
+                    <Link
+                        href={route("profile.edit")}
+                        className="flex items-center gap-1 px-4 py-2 text-gray-600 hover:bg-[#454ae756] hover:text-[#454BE7] rounded-md"
+                    >
+                        <BsBell />
+                        Notifications
+                    </Link>
+                    <Link
+                        href={route("profile.edit")}
+                        className="flex items-center gap-1 px-4 py-2 text-gray-600 hover:bg-[#454ae756] hover:text-[#454BE7] rounded-md"
+                    >
+                        <SlSettings />
+                        Settings
+                    </Link>
                 </div>
             </aside>
 
